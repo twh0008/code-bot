@@ -10,8 +10,14 @@ module.exports = {
     description: 'Displays random gif',
     args: true,
     usages : {
-        search: `<searchCategory> <searchTerm>`,
-        help: `help`
+        search: {
+            syntax: `search <searchTerm>`,
+            description: `-Searches for a term`
+        },
+        help: {
+            syntax: `help`,
+            description: `-overview of command`
+        } 
     },
     execute(message, args) {
         switch(args.length) {

@@ -27,8 +27,8 @@ for (const file of commandFiles) {
 
 client.on(`message`, message => {
     //Returns if no prefix || if author is a bot
-    if (!message.content.startsWith(`${prefix}`)) return;
-    // || message.author.bot) return;
+    if (!message.content.startsWith(`${prefix}`) || message.author.bot) return;
+    // 
     
     //Separates command from prefix 
     const args = message.content.slice(`${prefix.length}`).split(/ +/g);
@@ -47,7 +47,22 @@ client.on(`message`, message => {
 
         if (args.length > 0 && args[0].toLowerCase() === 'help') {
             //print log
-            return message.channel.send(`This will be a log of commands with proper descriptions for each.`);
+            let reply = `\`\`\`Usage: ${prefix}${command.name} <command>\n\n`
+
+            for(var key in command.usages) {
+                if(!command.usages.hasOwnProperty(key)) continue;
+
+                var obj = command.usages[key];
+                console.log(obj);
+                reply += `${prefix}${command.name} ${key}:`;
+
+                for (var prop in obj) {
+                    reply += ` ${obj[prop]}`;
+                }
+                reply += `\n`;    
+            }
+            reply += `\`\`\``;
+            return message.channel.send(`${reply}`);
         };
         //================================================================================================================================
 
@@ -70,7 +85,7 @@ client.on(`message`, message => {
             reply += `The functions are as follows: \n`
             let keys = Object.keys(command.usages);
             let values = Object.values(command.usages);
-            for (let i = 0; i < keys.length; i++) {
+            for (let i of keys) {
                 reply += `\`${keys[i]} : ${prefix}${command.name} ${values[i]}\n\``;
             };  
             return message.channel.send(reply);
