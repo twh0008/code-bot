@@ -25,7 +25,7 @@ client.on(`message`, message => {
     if (!message.content.startsWith(`${prefix}`) || message.author.bot) return;
     
     //Separates command from prefix 
-    const args = message.content.slice(`${prefix.length}`).split(/ +/);
+    const args = message.content.slice(`${prefix.length}`).split(/ +/g);
     const commandName = args.shift().toLowerCase();
     
 
@@ -33,24 +33,33 @@ client.on(`message`, message => {
 
     const command = client.commands.get(commandName);
     
+    
     try {
+        var usageArray;
         command.execute(message, args);
+        if (command.usage) {
+            usageArray = command.usage.slice().split(/ +/g);
+        }
+
+       
 
         if(command.guildOnly && message.channel.type != 'text') {
             return message.reply(`I can't execute that command inside DMs!`)
         };
 
-        if (command.args && !args.length) {
-            let reply = `You didn't provide any arguments, ${message.author}`;
-            if (command.usage) {
-                reply += `\n\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-            }
-            return message.channel.send(reply);
-
-
-
-
-        }
+        // if (command.args && !args.length) {
+        //     let reply = `You didn't provide any arguments, ${message.author}`;
+        //     if (command.usage) {
+        //         reply += `\n\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+        //     }
+        //     return message.channel.send(reply);
+        // }
+        // if ((command.args) && (args.length > usageArray.length)) {
+        //         let reply = `You provided too many arguments, ${message.author}`;
+        //         reply += `\n\nThe proper usage is : \`${prefix}${command.name} ${command.usage}\``;
+        //         reply += `\nOr use the default command: \`${prefix}${command.name}\` for random gifs`;
+        //         return message.channel.send(reply);
+        //     }
     }
     catch (err) {
         console.error(err);
