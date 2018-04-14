@@ -1,6 +1,10 @@
 module.exports = {
     name: 'clear',
     description: 'Clears all messages',
+    args: true,
+    usages: {
+        pinned: `!!clear pinned`
+    },
     execute(message, args) {
         message.channel.fetchMessages({ limit: 100 })
             .then(messages => {

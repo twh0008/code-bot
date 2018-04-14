@@ -15,34 +15,44 @@ const commandFiles = fs.readdirSync('./commands');
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
-}
+};
 
+//usagesMap
+//.set(usages, commandObject)
 
+//usagesMap.forEach(key => {
+//
+//});
 
 
 client.on(`message`, message => {
     //Returns if no prefix || if author is a bot
-    if (!message.content.startsWith(`${prefix}`) || message.author.bot) return;
+    if (!message.content.startsWith(`${prefix}`)) return;
+    // || message.author.bot) return;
     
     //Separates command from prefix 
     const args = message.content.slice(`${prefix.length}`).split(/ +/g);
     const commandName = args.shift().toLowerCase();
     
-
+    //Returns if no command
     if (!client.commands.has(commandName)) return;
 
     const command = client.commands.get(commandName);
     
     
     try {
-        var usageArray;
+        
+        // GENERIC ARGUMENTS
+        //================================================================================================================================
+
+        if (args.length > 0 && args[0].toLowerCase() === 'help') {
+            //print log
+            return message.channel.send(`This will be a log of commands with proper descriptions for each.`);
+        };
+        //================================================================================================================================
+
         command.execute(message, args);
-        if (command.usage) {
-            usageArray = command.usage.slice().split(/ +/g);
-        }
-
        
-
         if(command.guildOnly && message.channel.type != 'text') {
             return message.reply(`I can't execute that command inside DMs!`)
         };
@@ -54,12 +64,17 @@ client.on(`message`, message => {
         //     }
         //     return message.channel.send(reply);
         // }
-        // if ((command.args) && (args.length > usageArray.length)) {
-        //         let reply = `You provided too many arguments, ${message.author}`;
-        //         reply += `\n\nThe proper usage is : \`${prefix}${command.name} ${command.usage}\``;
-        //         reply += `\nOr use the default command: \`${prefix}${command.name}\` for random gifs`;
-        //         return message.channel.send(reply);
-        //     }
+  
+        if ((command.args && (args.length > Object.keys(command.usages).length))) {
+            let reply = `You provided too many arguments, ${message.author}\n`;
+            reply += `The functions are as follows: \n`
+            let keys = Object.keys(command.usages);
+            let values = Object.values(command.usages);
+            for (let i = 0; i < keys.length; i++) {
+                reply += `\`${keys[i]} : ${prefix}${command.name} ${values[i]}\n\``;
+            };  
+            return message.channel.send(reply);
+             }
     }
     catch (err) {
         console.error(err);
@@ -68,12 +83,9 @@ client.on(`message`, message => {
     
 });
 
-
-
 client.on('ready', () => {
     console.log("Ready!");
 });
-
 
 
 client.login(token);

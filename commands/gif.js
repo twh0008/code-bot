@@ -9,7 +9,10 @@ module.exports = {
     name: 'gif',
     description: 'Displays random gif',
     args: true,
-    usage ='<searchCategory> <searchTerm>',
+    usages : {
+        search: `<searchCategory> <searchTerm>`,
+        help: `help`
+    },
     execute(message, args) {
         switch(args.length) {
             //RANDOM GIF

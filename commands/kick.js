@@ -2,6 +2,7 @@ module.exports = {
     name: 'kick',
     description: 'Kicks tagged user',
     guildOnly: true,
+    args: false,
     execute(message, args) {
         const taggedUser = message.mentions.users.first();
         if (taggedUser) {
