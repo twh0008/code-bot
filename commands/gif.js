@@ -39,23 +39,23 @@ module.exports = {
     operators : {
         ratedY : {
             syntax: `-y`,
-            rating: `y`
+            description: `Rated Y`
         },
         ratedG : {
             syntax: `-g`,
-            rating: `g`
+            description: `Rated G`
         },
         ratedPG: {
             syntax: `-pg`,
-            rating: `pg`
+            description: `Rated PG`
         },
         ratedPG13 : {
             syntax: `-pg13`,
-            rating: `pg-13`
+            description: `Rated PG-13`
         },
         ratedR: {
             syntax: `-r`,
-            rating: `R`
+            description: `Rated R`
         },
     },
     execute(message, args) {
@@ -68,8 +68,9 @@ module.exports = {
             //for (var prop in obj) {
             let index = args.indexOf(`${obj.syntax}`);
             if (index > -1) {
-                //Change rating to obj.rating
-                rating = `${obj.rating.toUpperCase()}`;
+                let ret = `${obj.syntax.replace(`-`,``)}`;
+                //Change rating to obj.description
+                rating = ret;
                 //remove
                 args.splice(index, 1);
                 break;
@@ -102,7 +103,7 @@ module.exports = {
                 if (args[0].toLowerCase() === 'search') {
                     break;
                 }
-                var s = args[0];
+                let s = args[0];
                 fetch(`https://api.giphy.com/v1/gifs/translate?api_key=${KEY}&s=${s}`)
                     //parseJSON
                     .then(res => {
