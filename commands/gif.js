@@ -5,10 +5,14 @@ const fetch = require('node-fetch');
 //Giphy API Key
 const KEY = process.env.GIPHY_API;
 
+//default rating
+var rating = `G`;
+
 module.exports = {
     name: 'gif',
     description: 'Displays random gif',
     args: true,
+    extra: true,
     usages : {
         random: {
             syntax: ``,
@@ -27,12 +31,54 @@ module.exports = {
             description: `-Overview of command`
         } 
     },
+    operators : {
+        ratedY : {
+            syntax: `-y`,
+            rating: `y`
+        },
+        ratedG : {
+            syntax: `-g`,
+            rating: `g`
+        },
+        ratedPG: {
+            syntax: `-pg`,
+            rating: `pg`
+        },
+        ratedPG13 : {
+            syntax: `-pg13`,
+            rating: `pg-13`
+        },
+        ratedR: {
+            syntax: `-r`,
+            rating: `R`
+        },
+    },
     execute(message, args) {
+
+    if(this.extra) {
+//could add a count for the number of -* in args..
+
+        for (key in this.operators) {
+            let obj = this.operators[key];
+            //for (var prop in obj) {
+            let index = args.indexOf(`${obj.syntax}`);
+            if (index > -1) {
+                //Change rating to obj.rating
+                rating = `${obj.rating.toUpperCase()}`;
+                console.log(rating);
+                //remove
+                args.splice(index, 1);
+                break;
+                }
+           // }
+        } 
+    }
+
         switch(args.length) {
             //RANDOM GIF
             case 0:
                 
-                fetch(`https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=&rating=G`)
+                fetch(`https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=&rating=${rating}`)
                     //parseJSON
                     .then(res => {
                         return res.json();
@@ -77,7 +123,7 @@ module.exports = {
                 }
                 var q = args[1];
                 let limit = 100;
-                fetch(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${q}&limit=${limit}&offset=0&rating=G&lang=en`)
+                fetch(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${q}&limit=${limit}&offset=0&rating=${rating}&lang=en`)
                     //parseJSON
                     .then(res => {
                         return res.json();
