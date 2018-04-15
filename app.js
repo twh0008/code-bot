@@ -45,7 +45,7 @@ client.on(`message`, message => {
         // GENERIC ARGUMENTS
         //================================================================================================================================
 
-        if (args.length > 0 && args[0].toLowerCase() === 'help') {
+        if (command.args && (args.length > 0 && args[0].toLowerCase() === 'help')) {
             //print log
             let reply = `\`\`\`Usage: ${prefix}${command.name} <command>\n\n`
 

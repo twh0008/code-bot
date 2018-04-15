@@ -10,13 +10,21 @@ module.exports = {
     description: 'Displays random gif',
     args: true,
     usages : {
+        random: {
+            syntax: ``,
+            description: `-Displays a random gif`
+        },
+        translate: {
+            syntax: `<wordToTranslate>`,
+            description: `-Displays your word translated into a gif`
+        },
         search: {
             syntax: `search <searchTerm>`,
             description: `-Searches for a term`
         },
         help: {
             syntax: `help`,
-            description: `-overview of command`
+            description: `-Overview of command`
         } 
     },
     execute(message, args) {
