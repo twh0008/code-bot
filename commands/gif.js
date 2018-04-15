@@ -133,7 +133,12 @@ module.exports = {
                     //send GIF through message
                     .then(gif => {
                         let random = Math.floor(Math.random() * (`${limit}` - 1) + 1);
-                        message.channel.send(gif.data[`${random}`].embed_url);
+                        var result = gif.data[`${random}`];
+                        while(result.rating != rating.toLowerCase()) {
+                            random = Math.floor(Math.random() * (`${limit}` - 1) + 1);
+                            result = gif.data[`${random}`];
+                        }
+                        return message.channel.send(gif.data[`${random}`].embed_url);
                     })
                     //catch errors
                     .catch(err => {
