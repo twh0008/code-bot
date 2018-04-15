@@ -27,7 +27,7 @@ for (const file of commandFiles) {
 
 client.on(`message`, message => {
     //Returns if no prefix || if author is a bot
-    if (!message.content.startsWith(`${prefix}`) || message.author.bot) return;
+    if (!message.content.startsWith(`${prefix}`)) return;
     // 
     
     //Separates command from prefix 
@@ -44,33 +44,31 @@ client.on(`message`, message => {
         
         // GENERIC ARGUMENTS
         //================================================================================================================================
-
+        //Checks for help argument
         if (command.args && (userArgs.length > 0 && userArgs[0].toLowerCase() === 'help')) {
             let reply = listUsage(command);
             return message.channel.send(`${reply}`);
-        };
+        } 
         //================================================================================================================================
+        //Checks for additional arguments
+        if (!command.args && (userArgs.length > 0)) {
+            return message.channel.send(`\`\`\`There are no additional arguments.\nDefault use is : ${prefix}${command.name}\`\`\``);
+        }
+
 
         if (command.guildOnly && message.channel.type != 'text') {
             return message.reply(`I can't execute that command inside DMs!`)
         };
-        if ((command.args && (userArgs.length > Object.keys(command.usages).length))) {
+        //Checks for too many arguments
+
+        //find a way to compare length for each argument "usage"
+        if ((command.args && (userArgs.length > command.maxArgs))) {
             let reply = `You provided too many arguments, ${message.author}\n`;
             reply += listUsage(command);
             return message.channel.send(reply);
         }
 
         command.execute(message, userArgs);
-       
-       
-        // if (command.args && !userArgs.length) {
-        //     let reply = `You didn't provide any arguments, ${message.author}`;
-        //     if (command.usage) {
-        //         reply += `\n\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-        //     }
-        //     return message.channel.send(reply);
-        // }
-  
       
     }
     catch (err) {
@@ -90,14 +88,20 @@ client.on(`message`, message => {
 
             var obj = command.usages[key];
             console.log(obj);
-            reply += `${prefix}${command.name} ${key}:`;
-
+            
+            reply += `${key}:  `;;
             for (var prop in obj) {
-                reply += ` ${obj[prop]}`;
+                if (prop === `description`){
+                    reply += `  ${obj[prop]}`;
+                } else if (prop === `syntax`) {
+                    reply += `${prefix}${command.name}`;
+                    reply += ` ${obj[prop]}`;
+                }
             }
             reply += `\n`;
         }
         reply += `\`\`\``;
+        console.log(reply);
         return reply;
 
     };
