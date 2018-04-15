@@ -12,23 +12,28 @@ module.exports = {
     name: 'gif',
     description: 'Displays random gif',
     args: true,
+    maxArgs: 3,
     extra: true,
     usages : {
         random: {
             syntax: ``,
-            description: `-Displays a random gif`
+            description: `-Displays a random gif`,
+            length: 0
         },
         translate: {
             syntax: `<wordToTranslate>`,
-            description: `-Displays your word translated into a gif`
+            description: `-Displays your word translated into a gif`,
+            length: 0
         },
         search: {
             syntax: `search <searchTerm>`,
-            description: `-Searches for a term`
+            description: `-Searches for a term`,
+            length: 0
         },
         help: {
             syntax: `help`,
-            description: `-Overview of command`
+            description: `-Overview of command`,
+            length: 0
         } 
     },
     operators : {
@@ -65,7 +70,6 @@ module.exports = {
             if (index > -1) {
                 //Change rating to obj.rating
                 rating = `${obj.rating.toUpperCase()}`;
-                console.log(rating);
                 //remove
                 args.splice(index, 1);
                 break;
@@ -76,8 +80,7 @@ module.exports = {
 
         switch(args.length) {
             //RANDOM GIF
-            case 0:
-                
+            case 0:      
                 fetch(`https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=&rating=${rating}`)
                     //parseJSON
                     .then(res => {
@@ -106,8 +109,7 @@ module.exports = {
                         return res.json();
                     })
                     //send GIF through message
-                    .then(gif => {
-                        console.log(gif);
+                    .then(gif => {                       
                         message.channel.send(gif.data.embed_url);
                     })
                     //catch errors
@@ -139,7 +141,6 @@ module.exports = {
                         console.log(err);
                     });
                 break;
-     
             default:
                 break;
         }

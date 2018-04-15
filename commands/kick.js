@@ -3,6 +3,7 @@ module.exports = {
     description: 'Kicks tagged user',
     guildOnly: true,
     args: false,
+    extra: false,
     execute(message, args) {
         const taggedUser = message.mentions.users.first();
         if (taggedUser) {

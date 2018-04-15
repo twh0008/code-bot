@@ -2,6 +2,7 @@ module.exports = {
     name: 'clear',
     description: 'Clears all messages',
     args: false,
+    extra: false,
     execute(message, args) {
         message.channel.fetchMessages({ limit: 100 })
             .then(messages => {
