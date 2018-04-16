@@ -91,7 +91,6 @@ module.exports = {
             let obj = this.usages[c];
 
             let synr = obj.syntax.replace(/ *\<[^>]*\> */g, "");
-            console.log(synr);
             //match argument with "case"
             let index = args.indexOf(`${synr}`);
             if (index > -1) {
