@@ -9,5 +9,5 @@ A fun side project to practice JS, ES6, Git as well as API's.
 * [eslint](https://www.npmjs.com/package/eslint) - npm package used to identify patterns in JavasScript
 
 
-## Author
+## Author(s)
 * **Taylor Hartley** 
