@@ -47,17 +47,8 @@ client.on(`message`, message => {
         //Checks for help argument
         if (command.args && (userArgs.length > 0 && userArgs[0].toLowerCase() === 'help')) {
             let reply = listUsage(command);
-            if (command.extra) {
-                reply = listOperator(command, reply, userArgs);
-            }
             return message.channel.send(`${reply}`);
         } 
-        //Checks for operators argument
-        if (command.args && (userArgs.length > 0 && userArgs[0].toLowerCase() === 'operators')) {
-            let reply = '';
-            reply += listOperator(command, reply, userArgs);
-            return message.channel.send(`${reply}`);
-        }
         //================================================================================================================================
         //Checks for additional arguments
         if (!command.args && (userArgs.length > 0)) {
@@ -73,8 +64,7 @@ client.on(`message`, message => {
         //find a way to compare length for each argument "usage"
         if ((command.args && (userArgs.length > command.maxArgs))) {
             let reply = `You provided too many arguments, ${message.author}\n`;
-            reply += `Type \`${prefix}${command.name} help\` for correct use`;
-            //reply += listUsage(command);
+            reply += listUsage(command);
             return message.channel.send(reply);
         }
 
@@ -91,14 +81,15 @@ client.on(`message`, message => {
 
  
     function listUsage(command) {
-            reply = `\`\`\`Usage: ${prefix}${command.name} <command>\n\n`
-     
-        //grabs the usages
+        let reply = `\`\`\`Usage: ${prefix}${command.name} <command>\n\n`
+    
         for (var key in command.usages) {
             if (!command.usages.hasOwnProperty(key)) continue;
+
             var obj = command.usages[key];
+            console.log(obj);
+            
             reply += `${key}:  `;;
-           
             for (var prop in obj) {
                 if (prop === `description`){
                     reply += `  ${obj[prop]}`;
@@ -109,33 +100,14 @@ client.on(`message`, message => {
             }
             reply += `\n`;
         }
-        if (!command.extra) {
-            reply += `\`\`\``;
-        }
+        reply += `\`\`\``;
+        console.log(reply);
         return reply;
 
     };
-    function listOperator(command, reply, userArgs) {
-        this.reply = reply;
-        if (userArgs[0] === `operators`) {
-            reply += `\`\`\`\n`;
-        } else {
-            reply += `\n`
-        }
-        for(var key in command.operators) {
-            if (!command.operators.hasOwnProperty(key)) continue;
-            var obj = command.operators[key];
-            for (var prop in obj) {
-                reply += `  ${obj[prop]}`;
-            } 
-            reply += `\n`;
-        }
-        reply += `\`\`\``
-        return reply; 
-    };
-    
 
-    
+     
+
 
 
 client.on('ready', () => {
