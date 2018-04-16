@@ -7,7 +7,6 @@ const KEY = process.env.GIPHY_API;
 
 //default rating
 
-
 module.exports = {
     name: 'gif',
     description: 'Displays random gif',
