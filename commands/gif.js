@@ -6,13 +6,13 @@ const fetch = require('node-fetch');
 const KEY = process.env.GIPHY_API;
 
 //default rating
-var rating = `G`;
+
 
 module.exports = {
     name: 'gif',
     description: 'Displays random gif',
     args: true,
-    maxArgs: 3,
+    maxArgs: 4,
     extra: true,
     usages : {
         random: {
@@ -59,91 +59,112 @@ module.exports = {
         },
     },
     execute(message, args) {
+        var rating = `G`;
+        var q;
 
-    if(this.extra) {
-//could add a count for the number of -* in args..
 
-        for (key in this.operators) {
-            let obj = this.operators[key];
-            //for (var prop in obj) {
-            let index = args.indexOf(`${obj.syntax}`);
-            if (index > -1) {
-                let ret = `${obj.syntax.replace(`-`,``)}`;
-                //Change rating to obj.description
-                rating = ret;
-                //remove
-                args.splice(index, 1);
-                break;
-                }
-           // }
-        } 
-    }
 
-        switch(args.length) {
-            //RANDOM GIF
-            case 0:      
-                fetch(`https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=&rating=${rating}`)
-                    //parseJSON
-                    .then(res => {
-                        return res.json();
-                    })
-                    //send GIF through message
-                    .then(gif => {
-                        message.channel.send(gif.data.embed_url);
-                    })
-                    //catch errors
-                    .catch(err => {
-                        message.channel.send(`There was an error. No gifs :(`);
-                        console.log(err);
-                    });
+        if(this.extra) {
+        //could add a count for the number of -* in args..
+
+            for (key in this.operators) {
+                let obj = this.operators[key];
+                //for (var prop in obj) {
+                let index = args.indexOf(`${obj.syntax}`);
+                if (index > -1) {
+                    let ret = `${obj.syntax.replace(`-`,``)}`;
+                    //Change rating to obj.description
+                    rating = ret;
+                    //remove
+                    args.splice(index, 1);
                     break;
-            //TRANSLATE
-            case 1:
-                //framework for query
-                if (args[0].toLowerCase() === 'search') {
-                    break;
-                }
-                let s = args[0];
-                fetch(`https://api.giphy.com/v1/gifs/translate?api_key=${KEY}&s=${s}`)
-                    //parseJSON
-                    .then(res => {
-                        return res.json();
-                    })
-                    //send GIF through message
-                    .then(gif => {                       
-                        message.channel.send(gif.data.embed_url);
-                    })
-                    //catch errors
-                    .catch(err => {
-                        message.channel.send(`There was an error. No gifs :(`);
-                        console.log(err);
-                    });
-                    break;
-            //SEARCH       
-            case 2: 
-                if (!args[0].toLowerCase() === 'search') {
-                    break;
-                }
-                var q = args[1];
-                let limit = 100;
-                fetch(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${q}&limit=${limit}&offset=0&rating=${rating}&lang=en`)
-                    //parseJSON
-                    .then(res => {
-                        return res.json();
-                    })
-                    //send GIF through message
-                    .then(gif => {
-                        let random = Math.floor(Math.random() * (`${limit}` - 1) + 1);
-                        message.channel.send(gif.data[`${random}`].embed_url);
-                    })
-                    //catch errors
-                    .catch(err => {
-                        message.channel.send(`There was an error. No gifs :(`);
-                        console.log(err);
-                    });
-                break;
-            default:
-                break;
+                    }
+                // }
+            } 
         }
+
+        //let input = 
+        var input = ``;
+        //if args, assign t for translate
+        if (args[0]) input = `t`;
+
+        for(c in this.usages) {
+                let obj = this.usages[c];
+
+                let synr = obj.syntax.replace(/ *\<[^>]*\> */g, "");
+                console.log(synr);
+                //match argument with "case"
+                let index = args.indexOf(`${synr}`);
+                if (index > -1) {
+                    //remove words with <> from syntax
+                    input = args[index];
+                    args.splice(index, 1);
+                    break;
+                }
+            }
+            
+       
+            q = args[0];
+        
+            switch(input) {
+                //RANDOM GIF
+                case ``:   
+                    fetch(`https://api.giphy.com/v1/gifs/random?api_key=${KEY}&tag=&rating=${rating}`)
+                        //parseJSON
+                        .then(res => {
+                            return res.json();
+                        })
+                        //send GIF through message
+                        .then(gif => {
+                            return message.channel.send(gif.data.embed_url);
+                        })
+                        //catch errors
+                        .catch(err => {
+                            console.log(err);
+                            return message.channel.send(`There was an error. No gifs :(`);
+                        });
+                        break;
+                //TRANSLATE
+                case `t`:
+                    //framework for query            
+                    fetch(`https://api.giphy.com/v1/gifs/translate?api_key=${KEY}&s=${q}`)
+                        //parseJSON
+                        .then(res => {
+                            return res.json();
+                        })
+                        //send GIF through message
+                        .then(gif => {                       
+                            return message.channel.send(gif.data.embed_url);
+                        })
+                        //catch errors
+                        .catch(err => {
+                            console.log(err);
+                            return message.channel.send(`There was an error. No gifs :(`); 
+                        });
+                        break;
+                //SEARCH       
+                case `search`: 
+                    if (!args[0]) return message.channel.send(`Proper syntax: !!gif search <word>`);
+                    let limit = 100;
+                    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${KEY}&q=${q}&limit=${limit}&offset=0&rating=${rating}&lang=en`)
+                        //parseJSON
+                        .then(res => {
+                            return res.json();
+                        })
+                        //send GIF through message
+                        .then(gif => {
+                            let random = Math.floor(Math.random() * (`${limit}` - 1) + 1);
+                            return message.channel.send(gif.data[`${random}`].embed_url);
+                        })
+                        //catch errors
+                        .catch(err => {
+                            console.log(err);
+                            return message.channel.send(`No gifs with that word/phrase. Maybe try using a different word/phrase.`);
+                        });
+                    break;
+                default:
+
+                    break;
+            }
     }
 };
