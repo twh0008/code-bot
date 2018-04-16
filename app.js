@@ -88,8 +88,6 @@ client.on(`message`, message => {
     
 });
 
-
- 
     function listUsage(command) {
             reply = `\`\`\`Usage: ${prefix}${command.name} <command>\n\n`
      
