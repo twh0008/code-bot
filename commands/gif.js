@@ -96,6 +96,7 @@ module.exports = {
             if (index > -1) {
                 //remove words with <> from syntax
                 input = args[index];
+                input = input.toLowerCase();
                 args.splice(index, 1);
                 break;
             }
