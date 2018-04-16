@@ -31,7 +31,7 @@ client.on(`message`, message => {
     // 
 
     //Separates command from prefix 
-    const userArgs = message.content.slice(`${prefix.length}`).split(/ +/g);
+    const userArgs = message.content.toLowerCase().slice(`${prefix.length}`).split(/ +/g);
     const userCommand = userArgs.shift().toLowerCase();
 
     //Returns if no command

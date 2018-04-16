@@ -90,13 +90,12 @@ module.exports = {
         for (c in this.usages) {
             let obj = this.usages[c];
 
-            let synr = obj.syntax.replace(/ *\<[^>]*\> */g, "");
+            let synr = obj.syntax.replace(/ *\<[^>]*\> */g, "").toLowerCase();
             //match argument with "case"
             let index = args.indexOf(`${synr}`);
             if (index > -1) {
                 //remove words with <> from syntax
                 input = args[index];
-                input = input.toLowerCase();
                 args.splice(index, 1);
                 break;
             }
