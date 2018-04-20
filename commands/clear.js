@@ -8,7 +8,8 @@ module.exports = {
             .then(messages => {
                 amount = `${messages.size}`;
                 if ((amount >= 2 && amount <= 100) && (message.channel.parent.name === 'bots')) {
-                    message.channel.bulkDelete(amount, true).catch(err => {
+                    message.channel.bulkDelete(amount, true)
+                    .catch(err => {
                         console.log(err);
                         message.channel.send(err);
                     });
