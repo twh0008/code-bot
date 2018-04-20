@@ -23,7 +23,7 @@ module.exports = {
   name: "nsfw",
   description: "Displays nsfw",
   args: true,
-  maxArgs: 2,
+  maxArgs: 1,
   extra: false,
   usages: {
     random: {
