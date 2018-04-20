@@ -28,12 +28,12 @@ module.exports = {
   usages: {
     random: {
       syntax: ``,
-      description: `-Displays a random nsfw gif or image from /r/nsfw`,
+      description: `-Displays a random nsfw image from /r/bonermaterial`,
       length: 0
     },
-    gif: {
-      syntax: `gif`,
-      description: `-Displays a random nsfw gif`,
+    sexy: {
+      syntax: `sexy`,
+      description: `-Displays a random nsfw image from /r/sexybutnotporn`,
       length: 0
     }
   },
@@ -84,8 +84,8 @@ module.exports = {
 
     switch (input) {
       //RANDOM GIF
-      case `gif`:
-        var red = r.getSubreddit(`Gif_sources`).getRandomSubmission();
+      case `sexy`:
+        var red = r.getSubreddit(`sexybutnotporn`).getRandomSubmission();
         red
           .then(result => {
             var url = result.url;
@@ -97,8 +97,7 @@ module.exports = {
         break;
       //NSFW Image
       case `t`:
-        var red = r.getSubreddit(`nsfw`).getRandomSubmission();
-
+        var red = r.getSubreddit(`bonermaterial`).getRandomSubmission();
         red
           .then(result => {
             var url = result.url;
