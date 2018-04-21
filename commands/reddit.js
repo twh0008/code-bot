@@ -40,6 +40,11 @@ module.exports = {
       syntax: `new <subReddit>`,
       description: `-Displays new posts in your subreddit of choice`,
       length: 0
+    },
+    list: {
+      syntax: `list`,
+      description: `Links a list of subreddits that can be used`,
+      length: 0
     }
   },
   execute(message, args) {
@@ -115,10 +120,13 @@ module.exports = {
             return message.channel.send("Either that subreddit doesn't exist or you dont have permission to view it.");
           });
         break;
+      case `list`:
+        return message.channel.send(`https://www.reddit.com/r/ListOfSubreddits/wiki/listofsubreddits`);
+        break;
+
       default:
         return message.channel.send(
-          "No subreddit was named. Refer to !!reddit help for more"
-        );
+          "No subreddit was named. Refer to !!reddit help");
         break;
     }
     function getArray(result) {
