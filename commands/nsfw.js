@@ -35,6 +35,11 @@ module.exports = {
       syntax: `sexy`,
       description: `-Displays a random nsfw image from /r/sexybutnotporn`,
       length: 0
+    },
+    hardcore: {
+      syntax: `hardcore`,
+      description: `-Displays a random nsfw image from /r/nsfw CAN BE EXTREMELY GRAPHIC`,
+      length: 0
     }
   },
   execute(message, args) {
@@ -95,6 +100,18 @@ module.exports = {
             return message.channel.send("UH OH, something went wrong");
           });
         break;
+      case "hardcore":
+        var red = r.getSubreddit(`nsfw`).getRandomSubmission();
+        red
+          .then(result => {
+            var url = result.url;
+            return message.channel.send(url);
+          })
+          .catch(err => {
+            return message.channel.send("UH OH, something went wrong");
+          });
+        break;
+
       //NSFW Image
       case `t`:
         var red = r.getSubreddit(`bonermaterial`).getRandomSubmission();
@@ -106,6 +123,7 @@ module.exports = {
           .catch(err => {
             return message.channel.send("UH OH, something went wrong");
           });
+        break;
       default:
         break;
     }
