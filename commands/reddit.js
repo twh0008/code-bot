@@ -133,7 +133,7 @@ module.exports = {
     }
 
     function sendEmbed(array) {
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 3; i++) {
               var submission = array[i];
               if(submission.whitelist_status === `promo_adult_nsfw` && !message.channel.nsfw) {
                 return message.channel.send("Please use a nsfw channel.")
