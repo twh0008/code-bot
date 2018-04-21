@@ -10,7 +10,7 @@ const REDDIT_USER = process.env.REDDIT_USER;
 const REDDIT_CLIENT = process.env.REDDIT_CLIENT;
 const REDDIT_REFRESH = process.env.REDDIT_REFRESH;
 
-//default rating
+let display = "";
 
 const r = new snoowrap({
   userAgent: "code-bot 0.1",
@@ -24,7 +24,7 @@ module.exports = {
   description: "Displays reddit stuff",
   args: true,
   maxArgs: 3,
-  extra: false,
+  extra: true,
   usages: {
     hot: {
       syntax: `hot <subReddit>`,
@@ -47,81 +47,92 @@ module.exports = {
       length: 0
     }
   },
+  operators: {
+    ratedY: {
+      syntax: `-i`,
+      description: `Displays post w/ images instead of thumbnails`
+    }
+  },
   execute(message, args) {
-
     let subreddit = "";
     if (this.extra) {
-      //could add a count for the number of -* in args..
-
       for (key in this.operators) {
         let obj = this.operators[key];
-        //for (let prop in obj) {
         let index = args.indexOf(`${obj.syntax}`);
         if (index > -1) {
           let ret = `${obj.syntax.replace(`-`, ``)}`;
-          //Change rating to obj.description
-          rating = ret;
-          //remove
+          display = ret;
           args.splice(index, 1);
           break;
         }
-        // }
       }
     }
 
-    //let input =
     let input = ``;
-    
+
     if (args[0]) input = args[0];
 
     for (c in this.usages) {
       let obj = this.usages[c];
-
       let synr = obj.syntax.replace(/ *\<[^>]*\> */g, "").toLowerCase();
-      //match argument with "case"
       let index = args.indexOf(`${synr}`);
       if (index > -1) {
-        //remove words with <> from syntax
         input = args[index];
         args.splice(index, 1);
         break;
       }
     }
+
     subreddit = args[0];
+
     switch (input) {
-      //RANDOM GIF
       case `hot`:
-        r.getSubreddit(`${subreddit}`).getHot()
+        r
+          .getSubreddit(`${subreddit}`)
+          .getHot()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
             console.log(err);
-            return message.channel.send("Either that subreddit doesn't exist or you dont have permission to view it.");
+            return message.channel.send(
+              "Either that subreddit doesn't exist or you dont have permission to view it."
+            );
           });
         break;
       case `rising`:
-         r.getSubreddit(`${subreddit}`).getRising()
+        r
+          .getSubreddit(`${subreddit}`)
+          .getRising()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
             console.log(err);
-            return message.channel.send("Either that subreddit doesn't exist or you dont have permission to view it.");
+            return message.channel.send(
+              "Either that subreddit doesn't exist or you dont have permission to view it."
+            );
           });
         break;
       case `new`:
-         r.getSubreddit(`${subreddit}`).getNew()
+        r
+          .getSubreddit(`${subreddit}`)
+          .getNew()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
             console.log(err);
-            return message.channel.send("Either that subreddit doesn't exist or you dont have permission to view it.");
+            return message.channel.send(
+              "Either that subreddit doesn't exist or you dont have permission to view it."
+            );
           });
-          break;
+        break;
       case `list`:
-        return message.channel.send(`https://www.reddit.com/r/ListOfSubreddits/wiki/listofsubreddits`);
+        return message.channel.send(
+          `https://www.reddit.com/r/ListOfSubreddits/wiki/listofsubreddits`
+        );
       default:
         return message.channel.send(
-          "No subreddit was named. Refer to !!reddit help");
+          "No subreddit was named. Refer to !!reddit help"
+        );
         break;
     }
     function getArray(result) {
@@ -136,34 +147,41 @@ module.exports = {
     }
 
     function sendEmbed(array) {
-            for (let i = 0; i < 3; i++) {
-              let submission = array[i];
-              if(submission.whitelist_status === `promo_adult_nsfw` && !message.channel.nsfw) {
-                return message.channel.send("Please use a nsfw channel.")
-              }
-              let thumbnail = ""
-              if(submission.is_reddit_media_domain) {
-                thumbnail = submission.thumbnail;
-              } 
-              let link = `https://www.reddit.com${submission.permalink}`;         
-              let created = new Date(submission.created * 1000);
-              const embed = {
-                "content": "Stuff",
-                "title": submission.title,
-                "url": link,
-                "thumbnail": {
-                  "url" : thumbnail
-                },
-                "color": 9442302,
-                "timestamp": created
-              };
-              message.channel.send({embed});
-            }
-            return Promise.resolve(array);
-    } 
+      for (let i = 0; i < 3; i++) {
+        let submission = array[i];
+        console.log(submission);
+        if (
+          submission.whitelist_status === `promo_adult_nsfw` &&
+          !message.channel.nsfw
+        ) {
+          return message.channel.send("Please use a nsfw channel.");
+        }
+        let thumbnail = "";
+        let image = "";
+        if (submission.is_reddit_media_domain && display != `i`) {
+          thumbnail = submission.thumbnail;
+        } else if (submission.is_reddit_media_domain && display == `i`) {
+          image = submission.url;
+        }
 
+        let link = `https://www.reddit.com${submission.permalink}`;
+        let created = new Date(submission.created * 1000);
+        const embed = {
+          content: "Stuff",
+          title: submission.title,
+          url: link,
+          thumbnail: {
+            url: thumbnail
+          },
+          image: {
+            url: image
+          },
+          color: 9442302,
+          timestamp: created
+        };
+        message.channel.send({ embed });
+      }
+      return Promise.resolve(array);
+    }
   }
-
-
-
 };
