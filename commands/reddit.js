@@ -49,13 +49,13 @@ module.exports = {
   },
   execute(message, args) {
 
-    var subreddit = "";
+    let subreddit = "";
     if (this.extra) {
       //could add a count for the number of -* in args..
 
       for (key in this.operators) {
         let obj = this.operators[key];
-        //for (var prop in obj) {
+        //for (let prop in obj) {
         let index = args.indexOf(`${obj.syntax}`);
         if (index > -1) {
           let ret = `${obj.syntax.replace(`-`, ``)}`;
@@ -70,7 +70,7 @@ module.exports = {
     }
 
     //let input =
-    var input = ``;
+    let input = ``;
     
     if (args[0]) input = args[0];
 
@@ -91,8 +91,7 @@ module.exports = {
     switch (input) {
       //RANDOM GIF
       case `hot`:
-        var red = r.getSubreddit(`${subreddit}`).getHot();
-        red
+        r.getSubreddit(`${subreddit}`).getHot()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
@@ -101,8 +100,7 @@ module.exports = {
           });
         break;
       case `rising`:
-        var red = r.getSubreddit(`${subreddit}`).getRising();
-        red
+         r.getSubreddit(`${subreddit}`).getRising()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
@@ -111,48 +109,44 @@ module.exports = {
           });
         break;
       case `new`:
-        var red = r.getSubreddit(`${subreddit}`).getNew();
-        red
+         r.getSubreddit(`${subreddit}`).getNew()
           .then(getArray)
           .then(sendEmbed)
           .catch(err => {
             console.log(err);
             return message.channel.send("Either that subreddit doesn't exist or you dont have permission to view it.");
           });
-        break;
+          break;
       case `list`:
         return message.channel.send(`https://www.reddit.com/r/ListOfSubreddits/wiki/listofsubreddits`);
-        break;
-
       default:
         return message.channel.send(
           "No subreddit was named. Refer to !!reddit help");
         break;
     }
     function getArray(result) {
-      var submissions = [];
+      let submissions = [];
       result.forEach(submission => {
         if (submission.stickied) {
         } else {
           submissions.push(submission);
         }
       });
-      return submissions;
+      return Promise.resolve(submissions);
     }
 
     function sendEmbed(array) {
-            for (var i = 0; i < 3; i++) {
-              var submission = array[i];
+            for (let i = 0; i < 3; i++) {
+              let submission = array[i];
               if(submission.whitelist_status === `promo_adult_nsfw` && !message.channel.nsfw) {
                 return message.channel.send("Please use a nsfw channel.")
               }
-              var thumbnail = ""
+              let thumbnail = ""
               if(submission.is_reddit_media_domain) {
                 thumbnail = submission.thumbnail;
               } 
-              console.log(submission);
-              var link = `https://www.reddit.com${submission.permalink}`;         
-              var created = new Date(submission.created * 1000);
+              let link = `https://www.reddit.com${submission.permalink}`;         
+              let created = new Date(submission.created * 1000);
               const embed = {
                 "content": "Stuff",
                 "title": submission.title,
@@ -165,7 +159,7 @@ module.exports = {
               };
               message.channel.send({embed});
             }
-            return array;
+            return Promise.resolve(array);
     } 
 
   }
