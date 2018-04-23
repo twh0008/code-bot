@@ -40,6 +40,11 @@ module.exports = {
       syntax: `hardcore`,
       description: `-Displays a random nsfw image from /r/nsfw CAN BE EXTREMELY GRAPHIC`,
       length: 0
+    },
+    gif: {
+      syntax: `gif`,
+      description: `-Displays a random nsfw gif from /r/Gif_Sources CAN BE EXTREMELY GRAPHIC`,
+      length: 0
     }
   },
   execute(message, args) {
@@ -102,6 +107,17 @@ module.exports = {
         break;
       case "hardcore":
         var red = r.getSubreddit(`nsfw`).getRandomSubmission();
+        red
+          .then(result => {
+            var url = result.url;
+            return message.channel.send(url);
+          })
+          .catch(err => {
+            return message.channel.send("UH OH, something went wrong");
+          });
+        break;
+      case "gif":
+        var red = r.getSubreddit(`Gif_sources`).getRandomSubmission();
         red
           .then(result => {
             var url = result.url;
