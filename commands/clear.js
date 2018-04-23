@@ -4,10 +4,12 @@ module.exports = {
     args: false,
     extra: false,
     execute(message, args) {
+        if ((message.channel.parent.name !== bots) || (!message.channel.nsfw)) return;
+
         message.channel.fetchMessages({ limit: 100 })
             .then(messages => {
                 amount = `${messages.size}`;
-                if (amount >= 2 && amount <= 100 && (message.channel.parent.name === "bots" || message.channel.nsfw)) {
+                if (amount >= 2 && amount <= 100) {
                   message.channel
                     .bulkDelete(amount, true)
                     .catch(err => {
