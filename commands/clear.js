@@ -4,6 +4,7 @@ module.exports = {
     args: false,
     extra: false,
     execute(message, args) {
+        if (!message.channel.parent && !message.channel.nsfw) return;
         if ((message.channel.parent.name !== bots) || (!message.channel.nsfw)) return;
 
         message.channel.fetchMessages({ limit: 100 })
