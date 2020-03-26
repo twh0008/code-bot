@@ -28,7 +28,7 @@ client.commands = new Discord.Collection();
 client.on(`guildMemberRemove`, msg => {
     let user = msg.nickname ? msg.nickname : msg.user.username;
     channel = client.channels.find('id', '692792362035970100'); 
-    channel.send(`${user} + " left the server`);
+    channel.send(`${user} left the server`);
 });
 
 
