@@ -3,19 +3,19 @@ require('dotenv').config();
 //Requires
 const token = process.env.TOKEN;
 
-const fs = require('fs');
-const { prefix } = require("./config.json");
+// const fs = require('fs');
+// const { prefix } = require("./config.json");
 const Discord = require("discord.js");
 
 var client = new Discord.Client();
 client.commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands');
+// const commandFiles = fs.readdirSync('./commands');
 
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
-};
+// for (const file of commandFiles) {
+//     const command = require(`./commands/${file}`);
+//     client.commands.set(command.name, command);
+// };
 
 //usagesMap
 //.set(usages, commandObject)
@@ -25,7 +25,7 @@ for (const file of commandFiles) {
 //});
 
 
-client.on("guildMemberRemove", (msg) => {
+client.on(`guildMemberRemove`, msg => {
     let user = msg.nickname ? msg.nickname : msg.user.username;
     channel = client.channels.find('id', '692792362035970100'); 
     channel.send(`${user} + " left the server`);
