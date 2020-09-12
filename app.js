@@ -24,6 +24,12 @@ for (const file of commandFiles) {
 //
 //});
 
+client.on(`guildMemberRemove`, msg => {
+    let user = msg.nickname ? msg.nickname : msg.user.username;
+    channel = client.channels.find('id', '692792362035970100'); 
+    channel.send(`${user} left the server`);
+});
+
 
 client.on(`message`, message => {
     //Returns if no prefix || if author is a bot
