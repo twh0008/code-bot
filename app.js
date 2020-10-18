@@ -28,8 +28,8 @@ client.commands = new Discord.Collection();
 client.on(`guildMemberRemove`, msg => {
     let user = msg.nickname ? msg.nickname : msg.user.username;
     channel = client.channels.find('id', '692792362035970100'); 
-    //channel.send(`${user} left the server`);
-    channel.send('A user has left the channel, but unable to find user due to permission issues. Please contact Hartley.')
+    channel.send(`${user} left the server`);
+    //channel.send('A user has left the channel, but unable to find user due to permission issues. Please contact Hartley.')
 });
 
 
